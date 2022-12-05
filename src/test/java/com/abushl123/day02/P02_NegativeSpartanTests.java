@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class P02_NegativeSpartanTests extends ApiTestConstants {
+public class P02_NegativeSpartanTests implements ApiTestConstants {
 
     @BeforeAll
     public static void init() {

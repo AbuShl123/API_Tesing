@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class P01_SpartanGetRequest extends ApiTestConstants {
+public class P01_SpartanGetRequest implements ApiTestConstants {
     /*
      * Given to accept is application/json
      * When user sends GET request /api/spartans endpoint
