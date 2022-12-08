@@ -49,4 +49,32 @@ public class P03_HamcrestHr extends HRTestBase {
 
     }
 
+    @Test
+    public void test2() {
+        List<String> region_names = Arrays.asList("Europe", "Americas", "Asia", "Middle East and Africa");
+
+        JsonPath jsonPath =
+                given()
+                        .accept(ContentType.JSON).
+                when()
+                        .get("/regions").prettyPeek().
+                then().
+                        statusCode(200).
+                        contentType(ContentType.JSON.toString()).
+                        header("Date", notNullValue()).
+                        body("items[0].region_id", is(1)).
+                        body("items[0].region_name", is("Europe")).
+                        body("items.region_name", equalTo(region_names)).
+                        body("items.region_name", everyItem(notNullValue())).
+                        body("items.region_id", hasSize(4)).
+                        body("items.region_id", everyItem(notNullValue())).
+                        body("items.region_id", containsInRelativeOrder(1, 2, 3, 4)).
+                extract().jsonPath();
+
+        List<String> actualAllRegionName = jsonPath.getList("items.region_name");
+
+        System.out.println("region_names = " + region_names + "\n"
+                + "actualRegion_names = " + actualAllRegionName);
+    }
+
 }
