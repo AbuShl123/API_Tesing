@@ -29,16 +29,65 @@ public class P02_HamcrestSpartan extends SpartanTestBase {
     @DisplayName("Get single spartan with Hamcrest")
     @Test
     public void test1() {
-        given().accept(ContentType.JSON)
+        Response response = given().log().params()
+                .accept(ContentType.JSON)
                 .and().pathParam("id", 15)
                 .when().get("/api/spartans/{id}")
-                .then().
-                        statusCode(200).
+                .then().log().all().
+                statusCode(200).
 //                      statusCode(is(200)).
-                        contentType(ContentType.JSON.toString()).
-                        body("id", is(15),
-                                "name", is("Meta"),
-                                "gender", is("Female"),
-                                "phone", is(1938695106));
+        contentType(ContentType.JSON.toString()).
+                body("id", is(15),
+                        "name", is("Meta"),
+                        "gender", is("Female"),
+                        "phone", is(1938695106))
+                .extract().response();
+
+        int id = response.path("id");
+        System.out.println("id = " + id);
+
+        // HOW TO PRINT RESPONSE BODY
+        /*
+            - response.prettyPrint() (String) ---> it is printing response body into screen
+            - response.prettyPeek() (Response) ---> it will print response into screen, returns Response   and allows us to continue chaining
+         */
+
+
+        // HOW TO EXTRACT DATA AFTER DOING VALIDATION WITH HAMCREST ?
+        /*
+        - extract() --> method will help us to STORE data after doing verification as
+                response()
+                  OR
+                jsonPath()
+        - Why we need to extract ?
+            - Assume that we are gonna do verification against UI/DB.In that case I need to get data from API after doing verification
+            - SO we need to sometimes List of names / ids etc to check
+            - That is why we need to initialize as Response or JSonPAth (Since we know how to get data through these objects )
+               to get related data tact you wanna verify
+         */
+
+    }
+
+    @DisplayName("test 3")
+    @Test
+    public void test3() {
+
+        JsonPath jsonPath = given().accept(ContentType.JSON)
+                .pathParam("id", 15).
+                when().get("/api/spartans/{id}").prettyPeek().
+                then()
+                .statusCode(200)
+                // .statusCode(is(200)) --> if you wanna use with Matchers method you can use to increase readability
+                .contentType("application/json")
+                .body("id", is(15),
+                        "name", is("Meta"),
+                        "gender", is("Female"),
+                        "phone", is(1938695106))
+                .extract().response().jsonPath();
+
+        int id = jsonPath.getInt("id");
+        System.out.println("id = " + id);
+
+
     }
 }
