@@ -4,7 +4,7 @@ import com.abushl123.my_own.baseClasses.ApiTestConstants;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 
-public class SpartanTestBase implements ApiTestConstants {
+public abstract class SpartanTestBase implements ApiTestConstants {
 
 
 

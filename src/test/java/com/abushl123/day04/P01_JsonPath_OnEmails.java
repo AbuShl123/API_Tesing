@@ -12,7 +12,7 @@ import java.util.List;
 import static io.restassured.RestAssured.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class P01 extends HRTestBase {
+public class P01_JsonPath_OnEmails extends HRTestBase {
     @Test
     public void test() {
         Response response = given().accept(ContentType.JSON)
