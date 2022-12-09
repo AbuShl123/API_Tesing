@@ -1,5 +1,6 @@
 package com.abushl123.pojo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -10,8 +11,13 @@ import java.util.List;
 @Setter
 @ToString
 public class Region {
-    private int region_id;
-    private String region_name;
+    @JsonProperty("region_id")
+    private int regionId;
+
+    @JsonProperty("region_name")
+    private String regionName;
+
+    @JsonProperty("links")
     private List<Link> links;
 
 }
