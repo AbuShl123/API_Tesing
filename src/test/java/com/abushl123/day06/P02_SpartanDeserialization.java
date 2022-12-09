@@ -1,5 +1,6 @@
 package com.abushl123.day06;
 
+import com.abushl123.pojo.Search;
 import com.abushl123.pojo.Spartan;
 import com.abushl123.utilities.SpartanTestBase;
 import io.restassured.http.ContentType;
@@ -8,11 +9,11 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static io.restassured.RestAssured.*;
 
 public class P02_SpartanDeserialization extends SpartanTestBase {
-
-
 
     @DisplayName("Get single spartan for deserializing to POJO")
     @Test
@@ -64,5 +65,46 @@ public class P02_SpartanDeserialization extends SpartanTestBase {
 
         Spartan firstSpartan = jsonPath.getObject("content[0]", Spartan.class);
         System.out.println(firstSpartan);
+    }
+
+    @DisplayName("Get spartans for search endpoints for deserialization the search")
+    @Test
+    public void test3() {
+        Response response = given().accept(ContentType.JSON)
+                .when().get("/api/spartans/search")
+                .then().statusCode(200).extract().response();
+
+        System.out.println("--------------- RESPONSE ----------------");
+        Search responseSearch = response.as(Search.class);
+        System.out.println("responseSearch.getTotalElement() = " + responseSearch.getTotalElement());
+        System.out.println("responseSearch.getContent().get(0) = " + responseSearch.getContent().get(0));
+        System.out.println("responseSearch.getContent().get(15).getName() = " + responseSearch.getContent().get(15).getName());
+
+        System.out.println("\n\n------ JSON get single spartan ------");
+        JsonPath jsonPath = response.jsonPath();
+        Search search = jsonPath.getObject("", Search.class);
+
+        System.out.println("search.getTotalElement() = " + search.getTotalElement());
+        System.out.println("search.getContent().get(0) = " + search.getContent().get(0));
+        System.out.println("search.getContent().get(15).getName() = " + search.getContent().get(15).getName());
+    }
+
+    @Test
+    public void test4() {
+        Response response = given().accept(ContentType.JSON)
+                .when().get("/api/spartans/search")
+                .then().statusCode(200).extract().response();
+
+        JsonPath jsonPath = response.jsonPath();
+
+        List<Spartan> spartans = jsonPath.getList("content", Spartan.class);
+
+        for (Spartan v : spartans) {
+            System.out.println(v);
+        }
+
+        System.out.println("\n\n--------------------------------");
+        System.out.println("spartans.get(0) = " + spartans.get(0));
+        System.out.println("spartans.get(0).getName() = " + spartans.get(0).getName());
     }
 }
