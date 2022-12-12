@@ -1,8 +1,10 @@
 package com.abushl123.day03;
 
 import com.abushl123.utilities.HRTestBase;
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;
@@ -22,13 +24,16 @@ public class P02_HrWithParams extends HRTestBase {
     public void
     test1() {
         Response response = given().accept(ContentType.JSON)
-                .queryParams("e", "{\"region_id\": 2}")
-                .when().get(baseURI + "/countries");
+                .queryParams("q", "{\"region_id\": 2}")
+                .when().get(baseURI + "/countries/search");
 
         response.prettyPrint();
 
         assertEquals(200, response.statusCode());
+
         assertEquals(ContentType.JSON.toString(), response.contentType());
+
         assertTrue(response.body().asString().contains("United States of America"));
+
     }
 }
