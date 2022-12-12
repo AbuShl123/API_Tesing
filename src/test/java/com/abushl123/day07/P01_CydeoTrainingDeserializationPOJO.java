@@ -1,4 +1,6 @@
 package com.abushl123.day07;
+import com.abushl123.pojo.Address;
+import com.abushl123.pojo.Student;
 import com.abushl123.utilities.CydeoTrainingTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 
 import static io.restassured.RestAssured.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class P01_CydeoTrainingDeserializationPOJO extends CydeoTrainingTestBase {
 
@@ -38,6 +41,19 @@ public class P01_CydeoTrainingDeserializationPOJO extends CydeoTrainingTestBase 
                 .statusCode(200)
                 .extract().jsonPath();
 
+        Student student = jsonPath.getObject("students[0]", Student.class);
 
+        assertEquals("Mark", student.getFirstName());
+        assertEquals(13, student.getBatch());
+
+        assertEquals("math", student.getMajor());
+        assertEquals("mark@email.com", student.getContact().getEmailAddress());
+
+        Address address = student.getCompany().getAddress();
+
+        assertEquals("777 5th Ave", address.getStreet());
+        assertEquals(33222, address.getZipCode());
+
+        System.out.println(student);
     }
 }
