@@ -2,7 +2,6 @@ package com.abushl123.day08;
 
 import com.abushl123.utilities.SpartanAuthTestBase;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.Matchers.*;
@@ -44,4 +43,43 @@ public class P01_SpartanAuthTest extends SpartanAuthTestBase {
                 .when().delete("/api/spartans/{id}")
                 .then().statusCode(204);
     }
+
+    /**
+     * HOMEWORKS
+     *
+     *      ROLE Based Control Test --> RBAC
+     *
+     *      ADMIN   --> GET   POST    PUT     PATCH   DELETE   --> Spartan Flow
+     *      EDITOR  --> GET   POST    PUT     PATCH   403
+     *      USER    --> GET   403     403     403     403
+     *      GUEST   --> 401   401     401     401     401
+     *
+     *  -- Create RBAC Test for all different roles from Spartan Application including with Negative Test cases
+     *  -- Create SpartanUtil Class
+     *            public static Map<String, Object> SpartanUtil.getRandomSpartan(){
+     *                Map<String, Object> spartanMap = new HashMap();
+     *                spartanMap.put("name", faker.funnyName());
+     *
+     *                user Faker class to create each time different spartan information
+     *
+     *                return spartanMap
+     *            }
+     *
+     *            public static void GETSpartans (String role, String password, int statusCode, int id){
+     *
+     *                given().pathParam("id", id)
+     *                .auth().basic(role, password).
+     *                when().delete("/api/spartans/{id}").then().statusCode(statusCode);
+     *
+     *
+     *            }
+     *
+     *      Q --> can we create class in utilities class with loop for each user, admin, guest with passport make more dynamic
+     *              - YES we can but what if first user test is failing
+     *
+     *              - We should od it --> Data Driven Test
+     *
+     *              - JUnit5 DDT to implement
+     *
+     */
 }
