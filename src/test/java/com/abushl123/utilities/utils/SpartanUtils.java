@@ -7,13 +7,18 @@ import java.util.Map;
 import com.abushl123.pojo.Spartan;
 import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static io.restassured.RestAssured.given;
 
 public class SpartanUtils {
 
     private SpartanUtils() {} // private constructor
+
+
+
 
     /**
      * creates new Map with spartan name, gender, phone generated randomly with faker
@@ -26,7 +31,7 @@ public class SpartanUtils {
 
         spartanMap.put("name", faker.name().firstName());
         spartanMap.put("gender", faker.demographic().sex());
-        spartanMap.put("phone", faker.numerify("##########"));
+        spartanMap.put("phone", Long.valueOf(faker.numerify("30########")));
 
         return spartanMap;
     }
@@ -35,36 +40,34 @@ public class SpartanUtils {
 
 
     /**
-     * GET /api/spartans
-     * @param role
-     * @param password
-     * @param statusCode
+     * GET /api/spartans from API.
+     * @param role name of user
+     * @param password password of user
+     * @param statusCode expected status code
+     * @param contentType expected content type of response
      * @return Response object of all spartans
      */
-    public static Response getAllSpartans(String role, String password, int statusCode) {
+    public static Response getAllSpartans(String role, String password, int statusCode, String contentType) {
         return given()
-                .accept(ContentType.JSON)
-                .auth().basic(role, password)
+                .accept(contentType)
+                .auth().basic(role, password).log().ifValidationFails()
                 .when()
                 .get("/api/spartans")
                 .then()
                 .statusCode(statusCode)
-                .contentType(ContentType.JSON)
+                .contentType(contentType)
                 .extract().response();
     }
 
-
-
-
     /**
-     * GET /api/spartans
+     * GET /api/spartans from API.
      * Automatically authorizes as a user
      * @return Response object of all Spartans
      */
     public static Response getAllSpartans() {
         return given()
                 .accept(ContentType.JSON)
-                .auth().basic("user", "user")
+                .auth().basic("user", "user").log().ifValidationFails()
                 .when()
                 .get("/api/spartans")
                 .then()
@@ -77,10 +80,10 @@ public class SpartanUtils {
 
 
     /**
-     * GET /api/spartans/{id}
-     * @param role
-     * @param password
-     * @param statusCode
+     * GET /api/spartans/{id} from API.
+     * @param role name of user
+     * @param password password of user
+     * @param statusCode expected status code
      * @param id to get spartan with particular id
      * @return Response object of provided spartan
      */
@@ -88,7 +91,7 @@ public class SpartanUtils {
         return given()
                 .accept(ContentType.JSON)
                 .pathParam("id", id)
-                .auth().basic(role, password)
+                .auth().basic(role, password).log().ifValidationFails()
                 .when()
                 .get("/api/spartans/{id}")
                 .then()
@@ -97,9 +100,8 @@ public class SpartanUtils {
                 .extract().response();
     }
 
-
     /**
-     * GET /api/spartans/{id}
+     * GET /api/spartans/{id} from API.
      * Automatically authorizes as a user
      * @param id to get spartan with particular id
      * @return Response object of provided spartan
@@ -108,7 +110,7 @@ public class SpartanUtils {
         return given()
                 .accept(ContentType.JSON)
                 .pathParam("id", id)
-                .auth().basic("user", "user")
+                .auth().basic("user", "user").log().ifValidationFails()
                 .when()
                 .get("/api/spartans/{id}")
                 .then()
@@ -118,24 +120,185 @@ public class SpartanUtils {
     }
 
 
+
+
     /**
      * POST new spartan in API database
-     * @param role
-     * @param password
-     * @param statusCode
-     * @return int id of newly created Spartan
+     * @param role name of user
+     * @param password password of user
+     * @param statusCode expected status code
+     * @param contentType expected content type of response
+     * @return Response post
      */
-    public static int createNewSpartan(String role, String password, int statusCode) {
-        return given().accept(ContentType.JSON)
+    public static Response postNewSpartan(String role, String password, int statusCode, String contentType) {
+        return given().accept(contentType)
                 .contentType(ContentType.JSON)
                 .body(makeRandomSpartanMap())
-                .auth().basic(role, password)
+                .auth().basic(role, password).log().ifValidationFails()
                 .when().post("/api/spartans")
                 .then()
                 .statusCode(statusCode)
-                .contentType(ContentType.JSON)
-                .extract().jsonPath().getInt("id");
+                .contentType(contentType)
+                .extract().response();
     }
 
 
+
+
+    /**
+     * PUT /api/spartans/{id} to API.
+     * Updates an existing spartan with random properties
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to update
+     * @param statusCode expected status code
+     */
+    public static void putSpartan(String role, String password, int id, int statusCode) {
+        Map<String, Object> body = makeRandomSpartanMap();
+        given().pathParam("id", id)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .auth().basic(role, password).log().ifValidationFails()
+                .when().put("/api/spartans/{id}")
+                .then().statusCode(statusCode);
+
+        if(statusCode == 200) verifySpartan(id, body);
+    }
+
+    /**
+     * PUT /api/spartans/{id} to API.
+     * Updates an existing spartan with provided body
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to update
+     * @param statusCode expected status code
+     * @param body body of put method
+     */
+    public static void putSpartan(String role, String password, int id, int statusCode, Map<String, Object> body) {
+        given().pathParam("id", id)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .auth().basic(role, password).log().ifValidationFails()
+                .when().put("/api/spartans/{id}")
+                .then().statusCode(statusCode);
+    }
+
+    /**
+     * PUT /api/spartans/{id} to API.
+     * Updates an existing spartan with provided body
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to update
+     * @param statusCode expected status code
+     * @param body body of put method
+     */
+    public static void putSpartan(String role, String password, int id, int statusCode, String body) {
+        given().pathParam("id", id)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .auth().basic(role, password).log().ifValidationFails()
+                .when().put("/api/spartans/{id}")
+                .then().statusCode(statusCode);
+    }
+
+    /**
+     * PUT /api/spartans/{id} to API.
+     * Updates an existing spartan with provided body
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to update
+     * @param statusCode expected status code
+     * @param body body of put method
+     */
+    public static void putSpartan(String role, String password, int id, int statusCode, Spartan body) {
+        given().pathParam("id", id)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .auth().basic(role, password).log().ifValidationFails()
+                .when().put("/api/spartans/{id}")
+                .then().statusCode(statusCode);
+    }
+
+
+
+
+    /**
+     * PATCH /api/spartans/{id} to API.
+     * Updates existing spartan with provided info
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to update
+     * @param statusCode expected status code
+     * @param body body of patch method
+     */
+    public static void patchSpartan(String role, String password, int id, int statusCode, String body) {
+        given().pathParam("id", id)
+                .contentType(ContentType.JSON)
+                .body(body)
+                .auth().basic(role, password).log().ifValidationFails()
+                .when().patch("/api/spartans/{id}")
+                .then().statusCode(statusCode);
+
+    }
+
+
+
+
+    /**
+     * Gets one spartan from API and verifies its data with provided ExpectedProperties
+     * @param id id of existing spartan
+     * @param expectedProperties expected results to make assertions
+     */
+    public static void verifySpartan(int id, Map<String, Object> expectedProperties) {
+        JsonPath jsonPath = given().accept(ContentType.JSON)
+                .pathParam("id", id)
+                .auth().basic("user", "user").log().ifValidationFails()
+                .when().get("/api/spartans/{id}")
+                .then().statusCode(200).contentType(ContentType.JSON)
+                .extract().jsonPath();
+
+        assertEquals(jsonPath.getString("name"), expectedProperties.get("name"));
+        assertEquals(jsonPath.getString("gender"), expectedProperties.get("gender"));
+        assertEquals(jsonPath.getLong("phone"), expectedProperties.get("phone"));
+    }
+
+    /**
+     * Gets from API one spartan and verifies its data with provided ExpectedProperties
+     * @param id id of existing spartan
+     * @param expectedProperties expected results to make assertions
+     */
+    public static void verifySpartan(int id, Spartan expectedProperties) {
+        JsonPath jsonPath = given().accept(ContentType.JSON)
+                .pathParam("id", id)
+                .auth().basic("user", "user").log().ifValidationFails()
+                .when().get("/api/spartans/{id}")
+                .then().statusCode(200).contentType(ContentType.JSON)
+                .extract().jsonPath();
+
+        assertEquals(jsonPath.getString("name"), expectedProperties.getName());
+        assertEquals(jsonPath.getString("gender"), expectedProperties.getGender());
+        assertEquals(jsonPath.getLong("phone"), expectedProperties.getPhone());
+    }
+
+    /**
+     * Takes two spartans as arguments and compares them
+     * @param spartan actual spartan to verify
+     * @param expectedProperties expected results to make assertions
+     */
+    public static void verifySpartan(Spartan spartan, Spartan expectedProperties) {
+        assertEquals(spartan.getName(), expectedProperties.getName());
+        assertEquals(spartan.getGender(), expectedProperties.getGender());
+        assertEquals(spartan.getPhone(), expectedProperties.getPhone());
+    }
+
+    /**
+     * Takes two spartans as arguments and compares them
+     * @param spartan actual spartan to verify
+     * @param expectedProperties expected results to make assertions
+     */
+    public static void verifySpartan(Spartan spartan, Map<String, Object> expectedProperties) {
+        assertEquals(spartan.getName(), expectedProperties.get("name"));
+        assertEquals(spartan.getGender(), expectedProperties.get("gender"));
+        assertEquals(spartan.getPhone(), expectedProperties.get("phone"));
+    }
 }
