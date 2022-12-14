@@ -1,4 +1,4 @@
-package com.abushl123.utilities;
+package com.abushl123.utilities.test_bases;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;

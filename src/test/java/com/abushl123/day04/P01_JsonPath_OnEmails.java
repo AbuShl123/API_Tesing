@@ -1,8 +1,7 @@
 package com.abushl123.day04;
 
-import com.abushl123.utilities.HRTestBase;
+import com.abushl123.utilities.test_bases.HRTestBase;
 import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;

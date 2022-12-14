@@ -1,6 +1,6 @@
 package com.abushl123.day03;
 
-import com.abushl123.utilities.HRTestBase;
+import com.abushl123.utilities.test_bases.HRTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;

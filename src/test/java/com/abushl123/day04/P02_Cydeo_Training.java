@@ -1,6 +1,6 @@
 package com.abushl123.day04;
 
-import com.abushl123.utilities.CydeoTrainingTestBase;
+import com.abushl123.utilities.test_bases.CydeoTrainingTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

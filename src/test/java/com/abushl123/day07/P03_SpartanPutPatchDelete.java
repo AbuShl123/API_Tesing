@@ -1,7 +1,7 @@
 package com.abushl123.day07;
 
 import com.abushl123.pojo.Spartan;
-import com.abushl123.utilities.SpartanTestBase;
+import com.abushl123.utilities.test_bases.SpartanTestBase;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 

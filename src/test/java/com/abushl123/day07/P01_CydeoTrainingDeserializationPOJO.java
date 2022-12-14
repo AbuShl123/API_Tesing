@@ -1,7 +1,7 @@
 package com.abushl123.day07;
 import com.abushl123.pojo.Address;
 import com.abushl123.pojo.Student;
-import com.abushl123.utilities.CydeoTrainingTestBase;
+import com.abushl123.utilities.test_bases.CydeoTrainingTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.DisplayName;

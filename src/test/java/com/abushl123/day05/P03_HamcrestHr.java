@@ -1,10 +1,8 @@
 package com.abushl123.day05;
 
-import com.abushl123.utilities.HRTestBase;
+import com.abushl123.utilities.test_bases.HRTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -12,7 +10,6 @@ import java.util.List;
 
 import static io.restassured.RestAssured.*;
 
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 public class P03_HamcrestHr extends HRTestBase {

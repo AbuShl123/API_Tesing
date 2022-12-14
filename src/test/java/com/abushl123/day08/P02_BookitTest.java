@@ -1,11 +1,9 @@
 package com.abushl123.day08;
 
-import com.abushl123.utilities.BookitTestBase;
+import com.abushl123.utilities.test_bases.BookitTestBase;
 import com.abushl123.utilities.utils.BookitUtils;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
-
-import static org.hamcrest.Matchers.*;
 
 import static io.restassured.RestAssured.given;
 

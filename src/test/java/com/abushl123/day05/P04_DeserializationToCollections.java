@@ -1,6 +1,6 @@
 package com.abushl123.day05;
 
-import com.abushl123.utilities.SpartanTestBase;
+import com.abushl123.utilities.test_bases.SpartanTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;

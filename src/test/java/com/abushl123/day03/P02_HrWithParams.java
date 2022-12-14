@@ -1,10 +1,8 @@
 package com.abushl123.day03;
 
-import com.abushl123.utilities.HRTestBase;
-import io.restassured.RestAssured;
+import com.abushl123.utilities.test_bases.HRTestBase;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;

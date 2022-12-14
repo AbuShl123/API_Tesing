@@ -1,6 +1,6 @@
 package com.abushl123.day08;
 
-import com.abushl123.utilities.SpartanAuthTestBase;
+import com.abushl123.utilities.test_bases.SpartanAuthTestBase;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 
