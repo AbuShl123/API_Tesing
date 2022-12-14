@@ -23,4 +23,14 @@ public class P02_BookitTest extends BookitTestBase {
                 .then().statusCode(200);
 
     }
+
+//  "GET /api/users/me"
+    @Test
+    public void test2() {
+        System.out.println(accessToken);
+        given().accept(ContentType.JSON)
+                .header("Authorization", accessToken)
+                .when().get("/api/users/me").prettyPeek()
+                .then().statusCode(200);
+    }
 }
