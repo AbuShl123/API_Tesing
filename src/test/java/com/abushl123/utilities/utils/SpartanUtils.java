@@ -24,7 +24,7 @@ public class SpartanUtils {
      * creates new Map with spartan name, gender, phone generated randomly with faker
      * @return Map of (K: String V: Object) newSpartan
      */
-    public static Map<String, Object> makeRandomSpartanMap() {
+    public static Map<String, Object> getRandomSpartanMap() {
         Map<String, Object> spartanMap = new HashMap<>();
 
         Faker faker = new Faker(Locale.ITALY);
@@ -87,7 +87,7 @@ public class SpartanUtils {
      * @param id to get spartan with particular id
      * @return Response object of provided spartan
      */
-    public static Response getSingleSpartan(String role, String password, int statusCode, int id) {
+    public static Response getSingleSpartan(String role, String password, int id, int statusCode) {
         return given()
                 .accept(ContentType.JSON)
                 .pathParam("id", id)
@@ -104,9 +104,10 @@ public class SpartanUtils {
      * GET /api/spartans/{id} from API.
      * Automatically authorizes as a user
      * @param id to get spartan with particular id
+     * @param statusCode expected status code
      * @return Response object of provided spartan
      */
-    public static Response getSingleSpartan(int id) {
+    public static Response getSingleSpartan(int id, int statusCode) {
         return given()
                 .accept(ContentType.JSON)
                 .pathParam("id", id)
@@ -114,7 +115,7 @@ public class SpartanUtils {
                 .when()
                 .get("/api/spartans/{id}")
                 .then()
-                .statusCode(200)
+                .statusCode(statusCode)
                 .contentType(ContentType.JSON)
                 .extract().response();
     }
@@ -133,7 +134,7 @@ public class SpartanUtils {
     public static Response postNewSpartan(String role, String password, int statusCode, String contentType) {
         return given().accept(contentType)
                 .contentType(ContentType.JSON)
-                .body(makeRandomSpartanMap())
+                .body(getRandomSpartanMap())
                 .auth().basic(role, password).log().ifValidationFails()
                 .when().post("/api/spartans")
                 .then()
@@ -154,7 +155,7 @@ public class SpartanUtils {
      * @param statusCode expected status code
      */
     public static void putSpartan(String role, String password, int id, int statusCode) {
-        Map<String, Object> body = makeRandomSpartanMap();
+        Map<String, Object> body = getRandomSpartanMap();
         given().pathParam("id", id)
                 .contentType(ContentType.JSON)
                 .body(body)
@@ -239,6 +240,16 @@ public class SpartanUtils {
                 .when().patch("/api/spartans/{id}")
                 .then().statusCode(statusCode);
 
+    }
+
+
+
+
+    public static void deleteSpartan(String role, String password, int id, int statusCode) {
+        given().pathParam("id", id)
+                .auth().basic(role, password)
+                .when().delete("/api/spartans/{id}")
+                .then().statusCode(statusCode);
     }
 
 

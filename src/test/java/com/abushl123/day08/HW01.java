@@ -19,9 +19,12 @@ public class HW01 extends SpartanAuthTestBase {
 
         postNewSpartan("admin", "admin", 201, ContentType.JSON.toString());
 
-        putSpartan("admin", "admin", 56, 204);
+        putSpartan("admin", "admin", 56, 204); // this method updates spartan and then automatically validates if its updated or not.
 
         patchSpartan("admin", "admin", 75, 204, "{\"name\": \"Hercules\"}");
+
+        deleteSpartan("admin", "admin", 311, 204);
+        getSingleSpartan(311, 404); // verifying that spartan was actually deleted (404)
     }
 
     @DisplayName("editor test")
@@ -31,11 +34,14 @@ public class HW01 extends SpartanAuthTestBase {
 
         postNewSpartan("editor", "editor", 201, ContentType.JSON.toString());
 
-        Map<String, Object> newSpartan = makeRandomSpartanMap();
-        putSpartan("editor", "editor", 56, 204, newSpartan);
-        verifySpartan(56, newSpartan);
+        Map<String, Object> newSpartan = getRandomSpartanMap();
+        putSpartan("editor", "editor", 56, 204, newSpartan); // unlike put method on line 22 this one doesn't validate by itself
+        verifySpartan(56, newSpartan); // so I am calling validation method explicitly
 
-        patchSpartan("editor", "editor", 75, 204, "{\"gender\": \"Female\"}");
+        patchSpartan("editor", "editor", 75, 204, "{\"gender\": \"Female\"}"); // I don't know how to validate this -_-
+
+        deleteSpartan("editor", "editor", 310, 403);
+        getSingleSpartan(310, 200); // verifying that spartan was not deleted
     }
 
     @DisplayName("user test")
@@ -48,6 +54,9 @@ public class HW01 extends SpartanAuthTestBase {
         putSpartan("user", "user", 56, 403, new Spartan("Hercules", "Male", 14582360645L));
 
         patchSpartan("user", "user", 75, 403, "{\"name\": \"Leland\"}");
+
+        deleteSpartan("user", "user", 309, 403);
+        getSingleSpartan(309, 200); // verifying that spartan was not deleted
     }
 
     @DisplayName("unauthorized user test")
@@ -60,5 +69,8 @@ public class HW01 extends SpartanAuthTestBase {
         putSpartan("", "", 56, 401);
 
         patchSpartan("", "", 75, 401, "{\"name\": \"Hercules\"}");
+
+        deleteSpartan("", "", 308, 401);
+        getSingleSpartan(308, 200); // verifying that Spartan was not deleted
     }
 }
