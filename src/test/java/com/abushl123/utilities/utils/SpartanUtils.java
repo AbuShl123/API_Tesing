@@ -245,6 +245,13 @@ public class SpartanUtils {
 
 
 
+    /**
+     * Delete spartan from API
+     * @param role name of user
+     * @param password password of user
+     * @param id id of spartan to delete
+     * @param statusCode expected status code
+     */
     public static void deleteSpartan(String role, String password, int id, int statusCode) {
         given().pathParam("id", id)
                 .auth().basic(role, password)
