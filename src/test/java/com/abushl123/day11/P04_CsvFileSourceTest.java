@@ -6,8 +6,8 @@ import io.restassured.response.Response;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import static org.hamcrest.Matchers.*;
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class P04_CsvFileSourceTest {
     @ParameterizedTest
@@ -21,12 +21,11 @@ public class P04_CsvFileSourceTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/zipcode.csv", numLinesToSkip = 1)
     public void test2(String state, String city, int numberPlace) {
-        JsonPath jsonPath = given().baseUri("https://zippopotam.us")
+        given().baseUri("https://zippopotam.us")
                 .accept(ContentType.JSON)
                 .pathParam("state", state)
                 .pathParam("city", city)
-                .when().get("/us/{state}/{city}").jsonPath();
-
-        assertEquals(numberPlace, jsonPath.getList("places").size());
+                .when().get("/us/{state}/{city}")
+                .then().statusCode(200).body("places", hasSize(numberPlace));
     }
 }
