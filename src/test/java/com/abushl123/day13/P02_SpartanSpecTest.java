@@ -30,4 +30,12 @@ public class P02_SpartanSpecTest extends SpartanNewTestBase {
         when().get("/spartans").
         then().spec(resSpec);
     }
+
+    @Test
+    public void getSingleSpartanWithReqResSpec() {
+        given().spec(reqSpec)
+                .pathParam("id", 4)
+                .when().get("/spartans/{id}").prettyPeek()
+                .then().spec(resSpec);
+    }
 }
